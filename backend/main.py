@@ -1,8 +1,17 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import httpx
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 OLLAMA_URL= "http://localhost:11434/api/chat"
 MODEL_NAME = "llama3.2:3b"
@@ -17,7 +26,7 @@ def root():
     return {"status": "backend is running"}
 
 
-@app.post("/")
+@app.post("/chat")
 async def chat(request: ChatRequest):
     payload = {
         "model": MODEL_NAME,
