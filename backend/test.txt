@@ -1,0 +1,43 @@
+Chapter 1: World Capitals and Landmarks
+
+The capital of France is Paris. Paris is known worldwide for the Eiffel Tower, which was completed in 1889 for the World's Fair. The tower stands at 330 meters tall and was the tallest man-made structure in the world for over 40 years. Paris is also home to the Louvre Museum, which houses the Mona Lisa, and Notre-Dame Cathedral, a masterpiece of French Gothic architecture.
+
+The capital of Japan is Tokyo. Tokyo is one of the most populous metropolitan areas in the world, with over 37 million people living in the greater Tokyo area. The city is famous for its blend of ultra-modern technology and traditional culture, seen in landmarks like the Tokyo Tower, Senso-ji Temple, and the bustling Shibuya Crossing.
+
+The capital of Italy is Rome. Rome is often called the "Eternal City" and was the center of the Roman Empire for centuries. Famous landmarks include the Colosseum, the Roman Forum, and Vatican City, which is an independent city-state located entirely within Rome's borders.
+
+Chapter 2: Local Large Language Models
+
+This project uses Llama 3.2, a large language model developed by Meta, specifically the 3 billion parameter version. This model was chosen because it runs efficiently on consumer CPU hardware without requiring a dedicated graphics card. The model is served locally using Ollama, a tool designed to simplify running large language models on personal computers.
+
+Ollama handles model downloading, quantization, and serving through a simple command-line interface and a local REST API running on port 11434. This allows developers to build applications on top of local models without depending on cloud-based APIs, ensuring privacy and offline functionality.
+
+Quantization is a technique used to reduce the memory footprint of a model by lowering the precision of its internal parameters, typically from 16-bit floating point numbers down to 4-bit integers. This trades a small amount of accuracy for significantly reduced memory usage and faster inference speed.
+
+Chapter 3: Retrieval-Augmented Generation
+
+Retrieval-Augmented Generation, commonly known as RAG, is a technique that allows a language model to answer questions using external documents rather than relying solely on its training data. This is particularly useful for domain-specific knowledge, private company documents, or information that postdates the model's training cutoff.
+
+The RAG process typically involves several steps. First, documents are loaded and split into smaller chunks of text. Second, each chunk is converted into a numerical vector representation using an embedding model. Third, these vectors are stored in a specialized vector database. Fourth, when a user asks a question, the question itself is embedded and compared against the stored vectors to find the most semantically similar chunks. Finally, those retrieved chunks are inserted into the prompt sent to the language model, grounding its response in the actual document content.
+
+Vector databases such as Chroma, FAISS, and Pinecone are commonly used to store and search these embeddings efficiently, even across millions of documents.
+
+Chapter 4: Web Development Frameworks
+
+FastAPI is a modern Python web framework used for building APIs quickly and efficiently. It is built on top of Starlette for the web parts and Pydantic for data validation. FastAPI automatically generates interactive API documentation using Swagger UI, accessible at the /docs endpoint of any FastAPI application.
+
+Next.js is a React-based framework commonly used for building modern web frontends. It supports both server-side rendering and static site generation, and integrates particularly well with Vercel, the company that created it. Next.js uses a file-based routing system, where the folder structure inside the app directory determines the URL structure of the website.
+
+Tailwind CSS is a utility-first CSS framework that allows developers to style elements directly in their markup using predefined class names, rather than writing separate CSS files. This approach speeds up development for many projects, though it does require learning a large set of utility class names.
+
+Chapter 5: Software Containerization
+
+Docker is a platform used to package applications and their dependencies into portable units called containers. Unlike virtual machines, containers share the host operating system's kernel, making them significantly more lightweight and faster to start.
+
+A Dockerfile is a text file containing instructions for building a Docker image, specifying the base operating system, dependencies to install, files to copy, and commands to run. Docker Compose is a tool used to define and run multi-container applications using a single YAML configuration file, commonly used to coordinate a backend service, a database, and other supporting services together.
+
+Chapter 6: Basic Cooking Tips
+
+When boiling pasta, it is recommended to use a large pot of well-salted water, as this is one of the few opportunities to season the pasta itself. A common ratio is one tablespoon of salt per liter of water. Pasta should be stirred occasionally during the first few minutes of cooking to prevent it from sticking together.
+
+Searing meat at a high temperature before finishing it in the oven helps develop a flavorful crust through a chemical reaction known as the Maillard reaction, which occurs when proteins and sugars in food react under high heat, creating complex flavors and aromas.
