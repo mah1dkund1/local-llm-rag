@@ -17,3 +17,7 @@ Thumbs.db
 
 # IDE
 .vscode/
+
+# the uploaded files and the vector database
+backend/uploads/
+backend/chroma_store/
