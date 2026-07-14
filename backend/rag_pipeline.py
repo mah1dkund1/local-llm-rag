@@ -46,7 +46,7 @@ def ingest_document(file_path: str, document_id: str):
     
     return len(chunks)
      
-def retreive_relevant_chunks(query: str, document_id: str, k: int = 3):
+def retrieve_relevant_chunks(query: str, document_id: str, k: int = 3):
     # return top k most relevant chunks given a query and a docu
     
     vectorstore = Chroma(

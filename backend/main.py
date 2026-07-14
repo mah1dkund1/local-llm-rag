@@ -4,7 +4,7 @@ from pydantic import BaseModel
 import httpx
 import os
 import uuid
-from rag_pipeline import ingest_document, retreive_relevant_chunks
+from rag_pipeline import ingest_document, retrieve_relevant_chunks
 
 
 app = FastAPI()
@@ -61,14 +61,14 @@ async def chat(request: ChatRequest):
     user_message = request.message
     
     if request.document_id:
-        relevant_chunks = retreive_relevant_chunks(
+        relevant_chunks = retrieve_relevant_chunks(
             query = user_message,
             document_id = request.document_id
             )
         
         context = "\n\n".join(relevant_chunks)
         
-        prompt = f"""Answer the question using the context below. If the context doesn't contain relevant information, say so rather than guessing"
+        prompt = f"""Answer the question using the context below. If the context doesn't contain relevant information, say so rather than guessing
         
 Context:
 {context}
@@ -82,7 +82,7 @@ Question:
         "model": MODEL_NAME,
         "messages": [
             {
-                "role": "user", "content": request.message
+                "role": "user", "content": prompt
             }
         ],
         "stream": False

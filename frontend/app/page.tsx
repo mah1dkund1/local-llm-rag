@@ -13,6 +13,8 @@ type Chat = {
   id: string;
   title: string ;
   messages: Message[];
+  documentId: string | null;
+  documentName: string | null;
 
 
 };
@@ -32,6 +34,8 @@ export default function Home(){
   const[input, setInput] = useState("");
 
   const[loading , setLoading] = useState(false);
+
+  const[uploading, setUploading] = useState(false);
 
 
 
@@ -61,6 +65,8 @@ const createNewChat = () => {
     id: crypto.randomUUID(),
     title: "New chat",
     messages: [],
+    documentId: null,
+    documentName: null,
   };
   setChats((prev) => [newChat, ...prev]);
   setActiveChatId(newChat.id);
@@ -88,7 +94,49 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
         return { ...c, messages: newMessages, title: newTitle };
       })
     );
-  };
+ };
+
+ const handleFileSelect =  async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  if(!activeChatId){
+    createNewChat();
+  }
+
+  setUploading(true);
+
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData,
+
+    });
+
+    const data = await response.json();
+
+    setChats((prev) =>
+      prev.map((c) =>
+      c.id === activeChatId ? 
+    { ...c, documentId: data.document_id, documentName: data.filename }
+    : c
+  )  
+    );
+
+  } catch (error) {
+    console.error("Upload Failed:", error);
+    
+  }
+
+  finally {
+    setUploading(false);
+    e.target.value = "";
+  }
+};
+
 
   const sendMessage = async () => {
     if (input.trim() === "") return ;
@@ -111,7 +159,10 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
     const response = await fetch("http://localhost:8000/chat", {
       method: "POST",
       headers: {"Content-Type": "application/json" },
-      body: JSON.stringify({ message: userMessage.content}),
+      body: JSON.stringify({
+         message: userMessage.content,
+         document_id: activeChat?.documentId ?? null,
+      }),
     });
 
     const data = await response.json();
@@ -216,7 +267,29 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
           )}
         </div>
 
-        <div className="p-4 bg-white border-t border-gray-300 flex gap-2">
+        <div className="p-4 bg-white border-t border-gray-300 flex gap-2 items-centre">
+
+          <label
+            className={`cursor-pointer px-3 py-2 rounded-lg border text-sm ${
+              activeChat?.documentId
+              ? "bg-green-700 border-green-600 text-white"
+              : uploading
+              ? "bg-gray-700 border-gray-600 text-gray-400"
+              : "bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
+            }`}
+            >
+
+              {uploading ? "Uploading..." : activeChat?.documentId ? "Attached" : "Attach"}
+              <input
+                type="file"
+                onChange={handleFileSelect}
+                className="hidden"
+                disabled={uploading}
+                />
+            </label>
+
+
+
           <input
             type="text"
             value={input}

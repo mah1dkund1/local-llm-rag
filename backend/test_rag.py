@@ -1,16 +1,17 @@
-from rag_pipeline import ingest_document, retreive_relevant_chunks
+from rag_pipeline import ingest_document, retrieve_relevant_chunks
 
-num_chunks = ingest_document("test.txt", document_id="test-doc-1")
+# Fresh ingest, right now, so we know exactly what's in the store
+document_id = "debug-test-1"
+num_chunks = ingest_document("test.txt", document_id=document_id)
+print(f"Ingested {num_chunks} chunks\n")
 
-print(f"Ingested {num_chunks} chunks from test.txt")
+query = "What is my favorite hidden project codename?"
+results = retrieve_relevant_chunks(query, document_id=document_id)
 
-
-query = "What is the capital of France mentioned in the document?"
-results = retreive_relevant_chunks(query, document_id="test-doc-1")
-
-print (f"\nQuery {query}")
-print ("Retreived Chunks:")
+print(f"Query: {query}")
+print(f"Number of chunks retrieved: {len(results)}\n")
 
 for i, chunk in enumerate(results):
-    print(f"\n--- Chunk {i+1} ---")
-    print (chunk)
+    print(f"--- Chunk {i + 1} ---")
+    print(chunk)
+    print()

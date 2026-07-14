@@ -41,3 +41,7 @@ Chapter 6: Basic Cooking Tips
 When boiling pasta, it is recommended to use a large pot of well-salted water, as this is one of the few opportunities to season the pasta itself. A common ratio is one tablespoon of salt per liter of water. Pasta should be stirred occasionally during the first few minutes of cooking to prevent it from sticking together.
 
 Searing meat at a high temperature before finishing it in the oven helps develop a flavorful crust through a chemical reaction known as the Maillard reaction, which occurs when proteins and sugars in food react under high heat, creating complex flavors and aromas.
+
+Chapter 7: Me
+
+My name is Mahid Kundi. I am currently working on a personal project involving a locally-hosted large language model, integrated with a Retrieval-Augmented Generation pipeline. My favorite hidden project codename for this work is Falcon Nebula 42. I am building this project using FastAPI for the backend, Next.js for the frontend, and Ollama to run Llama 3.2 locally on my machine.
