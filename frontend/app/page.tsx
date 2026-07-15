@@ -149,7 +149,7 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
 
   const sendMessage = async () => {
     if (input.trim() === "") return ;
-
+    if (uploading) return;
     if(!activeChatId) {
       createNewChat();
       return ;
@@ -312,7 +312,7 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
           />
           <button
             onClick={sendMessage}
-            disabled={loading}
+            disabled={loading || uploading}
             className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 disabled:opacity-50"
           >
             Send
