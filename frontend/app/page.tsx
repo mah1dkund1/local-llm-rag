@@ -60,6 +60,19 @@ useEffect(() => {
 
 }, [chats]) ;
 
+const generateTitle = (text: string , maxLength: number = 30): string => {
+  if (text.length <= maxLength) return text;
+
+  const truncated = text.slice(0,  maxLength);
+  const lastSpaceIndex = truncated.lastIndexOf("");
+
+  const cleanTruncated = lastSpaceIndex > 0 ? truncated.slice(0, lastSpaceIndex) : truncated;
+
+  return cleanTruncated + "...";
+
+
+} ;
+
 const activeChat = chats.find((c) => c.id === activeChatId);
 
 const createNewChat = () => {
@@ -73,6 +86,7 @@ const createNewChat = () => {
   setChats((prev) => [newChat, ...prev]);
   setActiveChatId(newChat.id);
 };
+
 
 const deleteChat = (id: string) => {
   setChats((prev) => prev.filter((c) => c.id !== id));
@@ -90,7 +104,7 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
         const newMessages = updater(c.messages);
         const newTitle =
           c.messages.length === 0 && newMessages.length > 0
-            ? newMessages[0].content.slice(0, 30)
+            ? generateTitle(newMessages[0].content)
             : c.title;
 
         return { ...c, messages: newMessages, title: newTitle };
