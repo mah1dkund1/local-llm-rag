@@ -6,7 +6,7 @@ import os
 import uuid
 from rag_pipeline import ingest_document, retrieve_relevant_chunks
 
-ALLOWED_EXENSIONS = {".pdf" , ".txt"}
+ALLOWED_EXTENSIONS = {".pdf" , ".txt"}
 MAX_FILE_SIZE = 10 * 1024 * 1024 # 10 mb
 
 
@@ -44,7 +44,7 @@ async def upload_document(file: UploadFile = File(...)):
     
     file_ext = os.path.splitext(file.filename)[1].lower()
     
-    if file_ext not in ALLOWED_EXENSIONS:
+    if file_ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
             detail=f"Unsupported file type '{file_ext}'. Only PDF and TXT files are allowed."
@@ -64,7 +64,6 @@ async def upload_document(file: UploadFile = File(...)):
     
     file_path = os.path.join(UPLOAD_DIR, f"{document_id}_{file.filename}")
     with open(file_path, "wb") as f:
-        content = await file.read()
         f.write(content)
         
     num_chunks = ingest_document(file_path, document_id=document_id)

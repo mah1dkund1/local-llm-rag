@@ -217,122 +217,133 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
       sendMessage();
     }
   };
+return (
+  <div className="relative flex h-screen bg-[#0B0E1A] overflow-hidden">
+    {/* Ambient glow, sits behind everything, barely visible */}
+    <div className="pointer-events-none absolute -top-40 left-1/3 w-[600px] h-[600px] bg-gradient-to-br from-indigo-600/20 to-purple-600/10 rounded-full blur-3xl" />
 
-  return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="w-64 bg-gray-900 text-white flex flex-col">
-        <button
-          onClick={createNewChat}
-          className="m-3 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm"
-        >
-          + New chat
-        </button>
-        <div className="flex-1 overflow-y-auto">
-          {chats.map((chat) => (
-            <div
-              key={chat.id}
-              onClick={() => setActiveChatId(chat.id)}
-              className={`flex justify-between items-center px-3 py-2 cursor-pointer text-sm ${
-                chat.id === activeChatId
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-800"
-              }`}
+    {/* Sidebar */}
+    <div className="relative w-64 bg-gradient-to-b from-[#12162A] to-[#0F1226] text-white flex flex-col border-r border-white/[0.06]">
+     
+      
+      
+      <div className="p-4 border-b border-white/[0.06]">
+    <h2 className="text-white font-semibold">Yapper GPT</h2>
+  </div>
+      
+      <div className="flex-1 overflow-y-auto px-1.5 space-y-0.5">
+        {chats.map((chat) => (
+          <div
+            key={chat.id}
+            onClick={() => setActiveChatId(chat.id)}
+            className={`group flex justify-between items-center px-3 py-2.5 rounded-lg cursor-pointer text-sm border-l-2 transition-all duration-200 ${
+              chat.id === activeChatId
+                ? "bg-white/[0.06] border-purple-400 text-white"
+                : "border-transparent text-[#8B90B3] hover:bg-white/[0.03] hover:text-[#E8E9F5]"
+            }`}
+          >
+            <span className="truncate font-medium">{chat.title}</span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteChat(chat.id);
+              }}
+              className="text-[#8B90B3] hover:text-red-400 ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
             >
-              <span className="truncate">{chat.title}</span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteChat(chat.id);
-                }}
-                className="text-gray-400 hover:text-red-400 ml-2"
-              >
-                ✕
-              </button>
-            </div>
-          ))}
-        </div>
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+       <button
+        onClick={createNewChat}
+        className="m-3 p-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-sm font-medium text-white shadow-lg shadow-purple-900/30 transition-all duration-200"
+      >
+        + New chat
+      </button>
+    </div>
+
+    {/* Main chat panel */}
+    <div className="relative flex-1 flex flex-col">
+      <div className="p-4 bg-white/[0.02] backdrop-blur-md border-b border-white/[0.06]">
+        <h1 className="text-lg font-semibold text-[#E8E9F5] tracking-tight">
+          {activeChat ? activeChat.title : "Local LLM Chat"}
+        </h1>
+        {activeChat?.documentName && (
+          <p className="text-xs text-purple-300/80 mt-1 font-medium">
+            📄 {activeChat.documentName} attached
+          </p>
+        )}
       </div>
 
-      {/* Main chat panel */}
-      <div className="flex-1 flex flex-col">
-        <div className="p-4 bg-white border-b border-gray-300">
-          <h1 className="text-lg font-semibold text-gray-800">
-            {activeChat ? activeChat.title : "Local LLM Chat"}
-          </h1>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {activeChat?.messages.map((msg, index) => (
+      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        {activeChat?.messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex animate-[fadeSlideIn_0.25s_ease-out] ${
+              msg.role === "user" ? "justify-end" : "justify-start"
+            }`}
+          >
             <div
-              key={index}
-              className={`flex ${
-                msg.role === "user" ? "justify-end" : "justify-start"
+              className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                msg.role === "user"
+                  ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-900/20"
+                  : "bg-white/[0.04] backdrop-blur-sm text-[#E8E9F5] border border-white/[0.06]"
               }`}
             >
-              <div
-                className={`max-w-[70%] px-4 py-2 rounded-lg ${
-                  msg.role === "user"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-gray-800 border border-gray-300"
-                }`}
-              >
-                {msg.content}
-              </div>
+              {msg.content}
             </div>
-          ))}
-          {loading && (
-            <div className="flex justify-start">
-              <div className="max-w-[70%] px-4 py-2 rounded-lg bg-white text-gray-500 border border-gray-300">
-                Thinking...
-              </div>
+          </div>
+        ))}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="max-w-[70%] px-4 py-2.5 rounded-2xl bg-white/[0.04] text-[#8B90B3] border border-white/[0.06] text-sm">
+              Thinking...
             </div>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
 
-        <div className="p-4 bg-white border-t border-gray-300 flex gap-2 items-centre">
-
-          <label
-            className={`cursor-pointer px-3 py-2 rounded-lg border text-sm ${
-              activeChat?.documentId
-              ? "bg-green-700 border-green-600 text-white"
+      <div className="p-4 bg-white/[0.02] backdrop-blur-md border-t border-white/[0.06] flex gap-2 items-center">
+        <label
+          className={`cursor-pointer px-3 py-2 rounded-xl border text-sm font-medium transition-all duration-200 ${
+            activeChat?.documentId
+              ? "bg-purple-500/15 border-purple-400/40 text-purple-200"
               : uploading
-              ? "bg-gray-700 border-gray-600 text-gray-400"
-              : "bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
-            }`}
-            >
-
-              {uploading ? "Uploading..." : activeChat?.documentId ? "Attached" : "Attach"}
-              <input
-                type="file"
-                onChange={handleFileSelect}
-                className="hidden"
-                disabled={uploading}
-                />
-            </label>
-
-{uploadError && (
-  <span className="text-xs text-red-400">{uploadError}</span>
-)}
-
-
+              ? "bg-white/[0.03] border-white/[0.08] text-[#8B90B3]"
+              : "bg-white/[0.03] border-white/[0.08] text-[#8B90B3] hover:bg-white/[0.06] hover:text-[#E8E9F5]"
+          }`}
+        >
+          {uploading ? "Uploading..." : activeChat?.documentId ? "📎 Attached" : "📎 Attach"}
           <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type a message..."
-            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="file"
+            onChange={handleFileSelect}
+            className="hidden"
+            disabled={uploading}
           />
-          <button
-            onClick={sendMessage}
-            disabled={loading || uploading}
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 disabled:opacity-50"
-          >
-            Send
-          </button>
-        </div>
+        </label>
+
+        {uploadError && (
+          <span className="text-xs text-red-400">{uploadError}</span>
+        )}
+
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Type a message..."
+          className="flex-1 border border-white/[0.08] rounded-xl px-4 py-2.5 bg-white/[0.03] text-[#E8E9F5] placeholder:text-[#8B90B3] focus:outline-none focus:ring-2 focus:ring-purple-400/40 focus:border-purple-400/40 transition-all duration-200"
+        />
+        <button
+          onClick={sendMessage}
+          disabled={loading || uploading}
+          className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white px-6 py-2.5 rounded-xl font-medium shadow-lg shadow-purple-900/30 transition-all duration-200 disabled:opacity-40 disabled:shadow-none"
+        >
+          Send
+        </button>
       </div>
     </div>
-  );
+  </div>
+);
 }
