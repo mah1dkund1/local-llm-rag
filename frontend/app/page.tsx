@@ -37,6 +37,8 @@ export default function Home(){
 
   const[uploading, setUploading] = useState(false);
 
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
 
 
 useEffect(() => {
@@ -105,6 +107,7 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
   }
 
   setUploading(true);
+  setUploadError(null);
 
   try {
     const formData = new FormData();
@@ -115,6 +118,11 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
       body: formData,
 
     });
+
+    if (!response.ok) {
+      throw new Error(`Upload failed with status ${response.status}`);
+
+    }
 
     const data = await response.json();
 
@@ -128,6 +136,7 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
 
   } catch (error) {
     console.error("Upload Failed:", error);
+    setUploadError("Failed to upload document. Please try again.");
     
   }
 
@@ -288,6 +297,9 @@ const updateActiveChatMessages = (updater: (prev: Message[]) => Message[]) => {
                 />
             </label>
 
+{uploadError && (
+  <span className="text-xs text-red-400">{uploadError}</span>
+)}
 
 
           <input
