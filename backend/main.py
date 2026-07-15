@@ -1,10 +1,13 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File , HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import httpx
 import os
 import uuid
 from rag_pipeline import ingest_document, retrieve_relevant_chunks
+
+ALLOWED_EXENSIONS = {".pdf" , ".txt"}
+MAX_FILE_SIZE = 10 * 1024 * 1024 # 10 mb
 
 
 app = FastAPI()
@@ -38,6 +41,25 @@ def root():
 
 @app.post("/upload")
 async def upload_document(file: UploadFile = File(...)):
+    
+    file_ext = os.path.splitext(file.filename)[1].lower()
+    
+    if file_ext not in ALLOWED_EXENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file type '{file_ext}'. Only PDF and TXT files are allowed."
+        )
+    
+    content = await file.read()
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code = 400,
+            detail = "File is too large. Maximum size is 10MB."
+        )
+    
+    
+    
+    
     document_id = str(uuid.uuid4())
     
     file_path = os.path.join(UPLOAD_DIR, f"{document_id}_{file.filename}")
